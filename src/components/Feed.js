@@ -6,9 +6,13 @@ import Post from './Post'
 import post1 from '../images/post1.JPG'
 import { db } from '../firebase'
 import firebase from 'firebase'
+import { useSelector } from 'react-redux'
+import { selectUser } from '../features/userSlice'
+import FlipMove from 'react-flip-move'
 
 
 function Feed() {
+  const user = useSelector(selectUser)
   const [posts, setPosts] = useState([]);
   const [input, setInput] = useState('');
 
@@ -26,7 +30,7 @@ function Feed() {
     e.preventDefault();
 
     db.collection('posts').add({
-      name: 'Fahim Choudhury',
+      name: user.displayName,
       description: 'Software Engineer',
       message: input,
       image: '',
@@ -53,25 +57,20 @@ function Feed() {
           <InputOption Icon={Assignment} title='Write article' color='#7fc15e'/>
         </div>
       </div>
-      
-      {posts.map(({
-        id, data: { name, description, message, image }
-      }) => (
-        <Post 
-        key={id}
-        name={name}
-        description={description}
-        message={message}
-        image={image}
-        />
-      ))}
-      <Post 
-      name='Fahim Choudhury'
-      description='Software Engineer'
-      image={post1}
-      message='building the linkedin clone 🤙'
-      />
-      
+      <FlipMove>
+        {posts.map(({
+          id, data: { name, description, message, image }
+        }) => (
+
+            <Post 
+            key={id}
+            name={name}
+            description={description}
+            message={message}
+            image={image}
+            />
+        ))}
+      </FlipMove> 
     </div>
   )
 }
